@@ -42,15 +42,17 @@ public class GlideImageView extends android.support.v7.widget.AppCompatImageView
     public void setImage(String url) {
         if (mDefaultImageResId != 0) {
             Glide.with(mCon)
-                    .load(url)//目标URL
-                    .placeholder(mDefaultImageResId) //占位图片
-                    .error(mDefaultImageResId) //图片获取失败时默认显示的图片
-                    .diskCacheStrategy(DiskCacheStrategy.ALL) //缓存全尺寸图片，也缓存其他尺寸图片
+                    .load(url)
+                    .placeholder(mDefaultImageResId)
+                    //图片获取失败时默认显示的图片
+                    .error(mDefaultImageResId)
+                    //缓存全尺寸图片，也缓存其他尺寸图片
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .crossFade()
                     .into(this);
         } else {
-            ToastUtil.showMessage("亲请设置默认图片n(*≧▽≦*)n");
+//            ToastUtil.showMessage("亲请设置默认图片n(*≧▽≦*)n");
         }
 
     }
@@ -60,7 +62,10 @@ public class GlideImageView extends android.support.v7.widget.AppCompatImageView
 
     }
 
-    //设置圆角图片
+    /**
+     *
+     * 设置圆角图片
+     */
     public void setRoundImage(String url, int round) {
         if (mDefaultImageResId != 0) {
 

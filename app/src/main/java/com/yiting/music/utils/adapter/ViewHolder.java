@@ -1,11 +1,13 @@
 package com.yiting.music.utils.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.yiting.music.utils.StringUtil;
+import com.yiting.music.utils.glide.GlideImageView;
 
 /**
  * Created by Zhanglibin on 2018/1/18.
@@ -80,30 +82,14 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      * 设置图片通过路径,这里稍微处理得复杂一些，因为考虑加载图片的第三方可能不太一样
      * 也可以直接写死
      */
-    public ViewHolder setImageByUrl(int viewId, HolderImageLoader imageLoader) {
-        ImageView imageView = getView(viewId);
-        if (imageLoader == null) {
-            throw new NullPointerException("imageLoader is null!");
+    public ViewHolder setImage(int viewId, String url) {
+        GlideImageView imageView = (GlideImageView) getView(viewId);
+        if (StringUtil.isNotBlank(url)) {
+            imageView.setImage(url);
         }
-        imageLoader.displayImage(imageView.getContext(), imageView, imageLoader.getImagePath());
+
         return this;
     }
 
-    /**
-     * 图片加载，这里稍微处理得复杂一些，因为考虑加载图片的第三方可能不太一样
-     * 也可以不写这个类
-     */
-    public static abstract class HolderImageLoader {
-        private String mImagePath;
 
-        public HolderImageLoader(String imagePath) {
-            this.mImagePath = imagePath;
-        }
-
-        public String getImagePath() {
-            return mImagePath;
-        }
-
-        public abstract void displayImage(Context context, ImageView imageView, String imagePath);
-    }
 }

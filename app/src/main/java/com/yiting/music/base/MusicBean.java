@@ -20,7 +20,7 @@ public class MusicBean {
     /**
      * 艺术家
      */
-    private String artist;
+    private String author;
     /**
      * 专辑
      */
@@ -75,12 +75,12 @@ public class MusicBean {
         this.title = title;
     }
 
-    public String getArtist() {
-        return artist;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getAlbum() {

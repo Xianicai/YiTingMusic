@@ -2,20 +2,33 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="60dp"
+    android:background="@color/white">
+
+    <com.yiting.music.utils.glide.GlideImageView
+        android:id="@+id/image_cover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        app:placeholderImage="@mipmap/default_cover"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:text="有梦想的人不睡觉"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_author"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintLeft_toRightOf="@+id/image_cover"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="有梦想的人不睡觉"/>
 
     <TextView
         android:id="@+id/tv_author"
@@ -23,11 +36,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="5dp"
-        android:text="夏尼采"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name"/>
+        app:layout_constraintLeft_toRightOf="@+id/image_cover"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:text="夏尼采"/>
 
     <ImageView
         android:id="@+id/image_more"

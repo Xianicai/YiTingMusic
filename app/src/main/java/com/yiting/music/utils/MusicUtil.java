@@ -31,7 +31,7 @@ public class MusicUtil {
             while (cursor.moveToNext()) {
                 MusicBean musicBean = new MusicBean();
                 musicBean.setFileName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)));
-                musicBean.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
+                musicBean.setAuthor(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
                 musicBean.setPath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
                 musicBean.setId(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID)));
                 musicBean.setType(MusicBean.Type.LOCAL);
@@ -46,7 +46,7 @@ public class MusicUtil {
                     // 注释部分是切割标题，分离出歌曲名和歌手 （本地媒体库读取的歌曲信息不规范）
                     if (musicBean.getFileName().contains("-")) {
                         String[] str = musicBean.getFileName().split("-");
-                        musicBean.setArtist(str[0]);
+                        musicBean.setAuthor(str[0]);
                         musicBean.setFileName(str[1]);
                     }
                     list.add(musicBean);
