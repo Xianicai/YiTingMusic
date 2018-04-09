@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.yiting.music.HomeActivity">
+    tools:context="com.yiting.music.home.HomeActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -102,7 +102,15 @@
             android:id="@+id/image_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/progressbar"
             android:src="@mipmap/ic_play_bar_btn_next"/>
+        <SeekBar
+            android:id="@+id/progressbar"
+            android:progress="50"
+            android:secondaryProgress="80"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 </LinearLayout>

@@ -1,6 +1,6 @@
 package com.yiting.music.utils.playback;
 
-import android.support.v4.media.session.MediaSessionCompat;
+import com.yiting.music.base.MusicBean;
 
 /**
  * Date: 2018/4/4.
@@ -11,7 +11,7 @@ public interface Playback {
     /**
      * 开始播放
      */
-    void start();
+    void start(MusicBean music);
 
     /**
      * 停止播放
@@ -49,19 +49,24 @@ public interface Playback {
     void setCurrentStreamPosition(int pos);
 
     /**
-     * 更新最后播放歌曲的位置
+     *  更新最后播放歌曲的位置
      */
     void updateLastKnownStreamPosition();
 
     /**
      * 播放
      */
-    void play(MediaSessionCompat.QueueItem item);
+    void play(MusicBean music);
 
     /**
      * 暂停
      */
     void pause();
+
+    /**
+     * 继续播放
+     */
+    void resume();
 
     /**
      * 位移

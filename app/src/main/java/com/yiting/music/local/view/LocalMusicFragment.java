@@ -10,6 +10,7 @@ import com.yiting.music.base.MusicBean;
 import com.yiting.music.base.view.BaseFragment;
 import com.yiting.music.local.presenter.impl.LocalMusicPresenterImpl;
 import com.yiting.music.local.view.adapter.MusicListAdapter;
+import com.yiting.music.utils.adapter.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,12 @@ public class LocalMusicFragment extends BaseFragment implements LocalMusicView {
         mMusicListAdapter = new MusicListAdapter(getActivity(), mMusicBeanList);
         mRecyclerview.setAdapter(mMusicListAdapter);
         presenter.getMusicData(getActivity());
+        mMusicListAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
 
+            }
+        });
     }
 
     @Override
@@ -52,4 +58,5 @@ public class LocalMusicFragment extends BaseFragment implements LocalMusicView {
         mMusicBeanList.addAll(musicBeanList);
         mMusicListAdapter.notifyDataSetChanged();
     }
+
 }
