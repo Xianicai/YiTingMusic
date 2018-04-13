@@ -3,7 +3,7 @@ package com.yiting.music.utils.playutil;
 import android.os.Binder;
 
 import com.yiting.music.base.MusicBean;
-import com.yiting.music.utils.playback.Playback;
+import com.yiting.music.utils.EventCallback;
 
 /**
  * Date: 2018/4/9.
@@ -22,8 +22,9 @@ public class MusicBinder extends Binder implements Playback {
     }
 
     @Override
-    public void stop(boolean notifyListeners) {
+    public void stop() {
         service.stop();
+        service.stopTiming();
     }
 
     @Override
@@ -48,7 +49,7 @@ public class MusicBinder extends Binder implements Playback {
 
     @Override
     public long getCurrentStreamPosition() {
-        return service.getplayerState();
+        return service.getDuration();
     }
 
     @Override
@@ -64,21 +65,29 @@ public class MusicBinder extends Binder implements Playback {
     @Override
     public void play(MusicBean music) {
         service.play(music);
+        service.startTiming();
     }
 
     @Override
     public void pause() {
         service.pause();
+        service.stopTiming();
     }
 
     @Override
     public void resume() {
         service.resume();
+        service.startTiming();
     }
 
     @Override
     public void seekTo(long position) {
 
+    }
+
+    @Override
+    public void getProgress(EventCallback<Integer>  callback) {
+       service.getCurrentPosition(callback);
     }
 
     @Override
@@ -94,5 +103,10 @@ public class MusicBinder extends Binder implements Playback {
     @Override
     public void setCallback(Callback callback) {
 
+    }
+
+    @Override
+    public void onPrepared(EventCallback callback) {
+      service.getPrepared(callback);
     }
 }

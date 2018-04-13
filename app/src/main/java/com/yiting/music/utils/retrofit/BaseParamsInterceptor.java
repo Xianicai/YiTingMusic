@@ -32,10 +32,10 @@ public class BaseParamsInterceptor implements Interceptor {
 
         HttpUrl.Builder builder = oldRequest.url()
                 .newBuilder()
-                .setEncodedQueryParameter("client_sys", "android")
-                .setEncodedQueryParameter("aid", "android1")
-                .setEncodedQueryParameter("time", System.currentTimeMillis() + "")
-                .setEncodedQueryParameter("version", "2.421");
+                .setEncodedQueryParameter("format", "json")
+                .setEncodedQueryParameter("callback", "")
+                .setEncodedQueryParameter("from", "webapp_music")
+                .setEncodedQueryParameter("method", "baidu.ting.search.catalogSug");
 
         Request newRequest = oldRequest.newBuilder()
                 .method(oldRequest.method(), oldRequest.body())

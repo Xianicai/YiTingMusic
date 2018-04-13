@@ -1,11 +1,13 @@
 package com.yiting.music.local.view;
 
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.yiting.music.R;
+import com.yiting.music.base.Constant;
 import com.yiting.music.base.MusicBean;
 import com.yiting.music.base.view.BaseFragment;
 import com.yiting.music.local.presenter.impl.LocalMusicPresenterImpl;
@@ -47,7 +49,10 @@ public class LocalMusicFragment extends BaseFragment implements LocalMusicView {
         mMusicListAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Constant.RXBUS_PALY_MUSIC);
+                broadcastIntent.putExtra("MusicBean",mMusicBeanList.get(position));
+                getActivity().sendBroadcast(broadcastIntent);
             }
         });
     }

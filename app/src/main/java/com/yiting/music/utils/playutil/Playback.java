@@ -1,6 +1,7 @@
-package com.yiting.music.utils.playback;
+package com.yiting.music.utils.playutil;
 
 import com.yiting.music.base.MusicBean;
+import com.yiting.music.utils.EventCallback;
 
 /**
  * Date: 2018/4/4.
@@ -16,7 +17,7 @@ public interface Playback {
     /**
      * 停止播放
      */
-    void stop(boolean notifyListeners);
+    void stop();
 
     /**
      * 设置播放状态
@@ -49,7 +50,7 @@ public interface Playback {
     void setCurrentStreamPosition(int pos);
 
     /**
-     *  更新最后播放歌曲的位置
+     * 更新最后播放歌曲的位置
      */
     void updateLastKnownStreamPosition();
 
@@ -74,6 +75,12 @@ public interface Playback {
     void seekTo(long position);
 
     /**
+     * 位移
+     */
+    void getProgress(EventCallback<Integer> callback);
+
+
+    /**
      * 设置当前歌曲的ID
      */
     void setCurrentMediaId(String mediaId);
@@ -87,6 +94,11 @@ public interface Playback {
      * 设置回调
      */
     void setCallback(Callback callback);
+
+    /**
+     * 初始化流是否完成
+     */
+    void onPrepared(EventCallback callback);
 
     interface Callback {
 

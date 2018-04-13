@@ -2,11 +2,15 @@ package com.yiting.music.utils.playutil;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
 import com.yiting.music.base.MusicBean;
+import com.yiting.music.utils.EventCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +21,7 @@ import java.util.List;
  * Author: Zhanglibin
  */
 
-public class PalyerService extends Service {
+public class PalyerService extends Service implements MediaPlayer.OnPreparedListener {
     public static final int PLAYER_IS_PLAYING = 1;
     public static final int PLAYER_IS_PAUSE = 2;
     public static final int PLAYER_IS_STOP = 3;
@@ -25,6 +29,9 @@ public class PalyerService extends Service {
     public List<MusicBean> mMusicBeanList = new ArrayList<>();
     private MusicBean mMusicBean = new MusicBean();
     private MediaPlayer mMediaPlayer;
+    private int mDuration;
+    private EventCallback<Integer> callback;
+    private EventCallback prepareCallback;
 
     /**
      * Service中的onBind()方法是抽象方法，Service类本身就是抽象类，所以onBind()方法是必须重写的，即使我们用不到。
@@ -44,6 +51,8 @@ public class PalyerService extends Service {
     public void onCreate() {
         super.onCreate();
         mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setOnPreparedListener(this);
     }
 
     /**
@@ -54,17 +63,16 @@ public class PalyerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         play(mMusicBean);
-        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.getDuration();
-            }
-        });
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
         super.onDestroy();
     }
 
@@ -74,13 +82,11 @@ public class PalyerService extends Service {
      *
      * @param music 播放歌曲
      */
-    public void play(MusicBean music) {
+    public void play(final MusicBean music) {
         try {
-            mMediaPlayer.reset();
+//            mMediaPlayer.reset();
             mMediaPlayer.setDataSource(music.getPath());
-            mMediaPlayer.prepare();
-            mMediaPlayer.start();
-            playerState = PLAYER_IS_PLAYING;
+            mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,7 +112,6 @@ public class PalyerService extends Service {
      * 停止播放音乐
      */
     public void stop() {
-
         pause();
         mMediaPlayer.reset();
         playerState = PLAYER_IS_STOP;
@@ -117,6 +122,66 @@ public class PalyerService extends Service {
      */
     public int getplayerState() {
         return playerState;
+    }
+
+    public static final int MSG_START = 0;
+    public static final int MSG_STOP =1;
+    /**
+     * 获取播放进度
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_START:
+                    callback.onEvent( mMediaPlayer.getCurrentPosition()/1000);
+                    sendMessageDelayed(mHandler.obtainMessage(MSG_START),1000);
+                    break;
+                case MSG_STOP:
+
+                    break;
+            }
+        }
+    };
+    public void getCurrentPosition(final EventCallback<Integer> callback) {
+        this.callback = callback;
+        startTiming();
+    }
+    /**
+     * 开始获取进度
+     * */
+    public void stopTiming(){
+        mHandler.sendMessage(mHandler.obtainMessage(MSG_STOP));
+    }
+    /**
+     * 停止获取进度
+     * */
+    public void startTiming(){
+        mHandler.removeMessages(MSG_START);
+        mHandler.sendMessage(mHandler.obtainMessage(MSG_START));
+    }
+
+    /**
+     * 获取音频总长度
+     */
+    public int getDuration() {
+        return mDuration;
+    }
+
+
+    /**
+     * 获取初始化完成的 MediaPlayer
+     */
+    public void getPrepared(EventCallback callback) {
+        prepareCallback = callback;
+    }
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        prepareCallback.onEvent(mediaPlayer);
+        mDuration =  (mediaPlayer.getDuration())/1000;
+         mMediaPlayer.start();
+        playerState = PLAYER_IS_PLAYING;
     }
 
 

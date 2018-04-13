@@ -1,10 +1,12 @@
 package com.yiting.music.base;
 
+import java.io.Serializable;
+
 /**
  * Created by Zhanglibin on 2018/4/3.
  */
 
-public class MusicBean {
+public class MusicBean implements Serializable {
     /**
      * 歌曲类型:本地/网络
      */

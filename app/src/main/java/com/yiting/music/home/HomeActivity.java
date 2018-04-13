@@ -1,9 +1,12 @@
 package com.yiting.music.home;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.TabLayout;
@@ -12,14 +15,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.yiting.music.R;
+import com.yiting.music.base.Constant;
 import com.yiting.music.base.MusicBean;
 import com.yiting.music.base.view.BaseActivity;
 import com.yiting.music.local.model.impl.LocalMusicProviderImpl;
 import com.yiting.music.local.view.LocalMusicFragment;
 import com.yiting.music.online.OnlineMusicFragment;
+import com.yiting.music.utils.EventCallback;
 import com.yiting.music.utils.ListUtil;
 import com.yiting.music.utils.MusicUtil;
 import com.yiting.music.utils.glide.GlideImageView;
@@ -53,6 +59,8 @@ public class HomeActivity extends BaseActivity {
     ImageView mImagePlay;
     @BindView(R.id.image_next)
     ImageView mImageNext;
+    @BindView(R.id.seekbar)
+    SeekBar mSeekbar;
     private boolean isBind = false;
     private List<MusicBean> mMusicBeanList = new ArrayList<>();
     private int mMusicIndex = 0;
@@ -64,6 +72,19 @@ public class HomeActivity extends BaseActivity {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
             mMusicBinder = (MusicBinder) binder;
+            mMusicBinder.getProgress(new EventCallback<Integer>() {
+                @Override
+                public void onEvent(Integer integer) {
+                    mSeekbar.setProgress(integer);
+                }
+            });
+            mMusicBinder.onPrepared(new EventCallback() {
+                @Override
+                public void onEvent(Object o) {
+                    MediaPlayer mediaPlayer = (MediaPlayer) o;
+                    mSeekbar.setMax(mediaPlayer.getDuration() / 1000);
+                }
+            });
         }
 
         @Override
@@ -127,8 +148,14 @@ public class HomeActivity extends BaseActivity {
         //将第一个数据初始化
         if (ListUtil.isNotEmpty(mMusicBeanList)) {
             mMusicBean = mMusicBeanList.get(0);
-            changView();
+//            changView();
         }
+        addEvent();
+    }
+
+    private void addEvent() {
+        Reciver mReciver = new Reciver();
+        registerReceiver(mReciver, new IntentFilter(Constant.RXBUS_PALY_MUSIC));
     }
 
     private List<MusicBean> getData() {
@@ -146,23 +173,31 @@ public class HomeActivity extends BaseActivity {
             case R.id.image_cover:
                 break;
             case R.id.image_play:
-                switch (mMusicBinder.getState()) {
-                    case PalyerService.PLAYER_IS_STOP:
-                        mMusicBinder.play(mMusicBean);
-                        mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
-                        break;
-                    case PalyerService.PLAYER_IS_PLAYING:
-                        mMusicBinder.pause();
-                        mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_play);
-                        break;
-                    case PalyerService.PLAYER_IS_PAUSE:
-                        mMusicBinder.resume();
-                        mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
-                        break;
-                }
+                playMusic(mMusicBean);
                 break;
             case R.id.image_next:
                 playNext();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void playMusic(MusicBean musicBean) {
+
+        switch (mMusicBinder.getState()) {
+            case PalyerService.PLAYER_IS_STOP:
+                mMusicBinder.play(musicBean);
+                changView(musicBean);
+                mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
+                break;
+            case PalyerService.PLAYER_IS_PLAYING:
+                mMusicBinder.pause();
+                mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_play);
+                break;
+            case PalyerService.PLAYER_IS_PAUSE:
+                mMusicBinder.resume();
+                mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
                 break;
             default:
                 break;
@@ -182,14 +217,14 @@ public class HomeActivity extends BaseActivity {
         if (ListUtil.isNotEmpty(mMusicBeanList)) {
             mMusicBean = mMusicBeanList.get(mMusicIndex);
             mMusicBinder.play(mMusicBean);
-            changView();
+            changView(mMusicBean);
         }
     }
 
-    private void changView() {
-        mTvAuthor.setText(mMusicBean.getAuthor());
-        mTvName.setText(mMusicBean.getTitle());
-        mImageCover.setImage(mMusicBean.getCoverPath());
+    private void changView(MusicBean musicBean) {
+        mTvAuthor.setText(musicBean.getAuthor());
+        mTvName.setText(musicBean.getTitle());
+        mImageCover.setImage(musicBean.getCoverPath());
         mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
     }
 
@@ -197,5 +232,19 @@ public class HomeActivity extends BaseActivity {
     public void onDestroy() {
         super.onDestroy();
         unbindService(mConnection);
+    }
+
+    class Reciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Constant.RXBUS_PALY_MUSIC.equals(intent.getAction())) {
+                MusicBean musicBean = (MusicBean) intent.getSerializableExtra("MusicBean");
+                mMusicBinder.stop();
+                mMusicBinder.play(musicBean);
+                changView(musicBean);
+                mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
+            }
+        }
+
     }
 }
