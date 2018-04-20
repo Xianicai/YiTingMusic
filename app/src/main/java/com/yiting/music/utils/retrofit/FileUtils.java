@@ -225,7 +225,7 @@ public class FileUtils {
      */
     public static File getCacheDir(Context context) {
         Log.i("getCacheDir", "cache sdcard state: " + Environment.getExternalStorageState());
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             File cacheDir = context.getExternalCacheDir();
             if (cacheDir != null && (cacheDir.exists() || cacheDir.mkdirs())) {
                 Log.i("getCacheDir", "cache dir: " + cacheDir.getAbsolutePath());

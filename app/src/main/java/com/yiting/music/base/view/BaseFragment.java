@@ -17,7 +17,7 @@ import butterknife.Unbinder;
 public abstract class BaseFragment extends RxFragment implements BaseView {
     private Unbinder mUnbinder;
 
-    public  abstract int  getLayoutId();
+    public abstract int getLayoutId();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state)

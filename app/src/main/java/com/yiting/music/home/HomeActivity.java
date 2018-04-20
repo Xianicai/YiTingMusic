@@ -24,7 +24,7 @@ import com.yiting.music.base.MusicBean;
 import com.yiting.music.base.view.BaseActivity;
 import com.yiting.music.local.model.impl.LocalMusicProviderImpl;
 import com.yiting.music.local.view.LocalMusicFragment;
-import com.yiting.music.online.OnlineMusicFragment;
+import com.yiting.music.online.view.OnlineMusicFragment;
 import com.yiting.music.utils.EventCallback;
 import com.yiting.music.utils.ListUtil;
 import com.yiting.music.utils.MusicUtil;

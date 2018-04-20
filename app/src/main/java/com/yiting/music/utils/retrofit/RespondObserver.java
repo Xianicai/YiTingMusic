@@ -2,7 +2,7 @@ package com.yiting.music.utils.retrofit;
 
 import android.util.Log;
 
-import com.yiting.music.utils.ToastUtil;
+import com.yiting.music.online.model.bean.BaseBean;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -12,7 +12,7 @@ import retrofit2.HttpException;
  * Created by Zhanglibin on 2017/11/16.
  */
 
-public class RespondObserver<T> implements Observer<HttpResult<T>> {
+public class RespondObserver<T extends BaseBean> implements Observer<T> {
     private static final String TAG = "RespondObserver";
 
     @Override
@@ -21,11 +21,11 @@ public class RespondObserver<T> implements Observer<HttpResult<T>> {
     }
 
     @Override
-    public void onNext(HttpResult<T> tHttpResult) {
-        if (tHttpResult.error == 0) {
-            onSuccess(tHttpResult.getData());
+    public void onNext(T tHttpResult) {
+        if (tHttpResult.isSuccess()) {
+            onSuccess(tHttpResult);
         } else {
-            ToastUtil.showMessage(tHttpResult.getMessage());
+//            ToastUtil.showMessage(((HttpResult)tHttpResult).getMessage());
             onFailure();
         }
 

@@ -6,7 +6,7 @@ package com.yiting.music.utils.retrofit;
 
 public class HttpResult<T> {
 
-    int error;
+    int error_code;
     String message;
     T data;
 
@@ -26,13 +26,11 @@ public class HttpResult<T> {
         this.data = data;
     }
 
-    public int getError() {
-        return error;
+    public int getError_code() {
+        return error_code;
     }
 
-    public void setError(int error) {
-        this.error = error;
+    public void setError_code(int error_code) {
+        this.error_code = error_code;
     }
-
-
 }

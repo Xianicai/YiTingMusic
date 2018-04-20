@@ -29,17 +29,17 @@ public class BaseParamsInterceptor implements Interceptor {
      * @return
      */
     private Request addParam(Request oldRequest) {
-
         HttpUrl.Builder builder = oldRequest.url()
                 .newBuilder()
                 .setEncodedQueryParameter("format", "json")
                 .setEncodedQueryParameter("callback", "")
-                .setEncodedQueryParameter("from", "webapp_music")
-                .setEncodedQueryParameter("method", "baidu.ting.search.catalogSug");
+                .setEncodedQueryParameter("from", "webapp_music");
 
         Request newRequest = oldRequest.newBuilder()
                 .method(oldRequest.method(), oldRequest.body())
                 .url(builder.build())
+                .removeHeader("User-Agent")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
                 .build();
 
         return newRequest;

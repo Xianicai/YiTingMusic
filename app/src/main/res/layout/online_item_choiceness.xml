@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center_vertical"
+        android:text="精选歌曲"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_primary_size"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_hot"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingRight="10dp"
+        android:text="最热"
+        android:textSize="@dimen/text_secondary_size"
+        app:layout_constraintRight_toLeftOf="@+id/tv_new"/>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="1px"
+        android:layout_height="10dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_new"
+        app:layout_constraintRight_toLeftOf="@+id/tv_new"
+        app:layout_constraintTop_toTopOf="@+id/tv_new"/>
+
+    <TextView
+        android:id="@+id/tv_new"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="最新"
+        android:textSize="@dimen/text_secondary_size"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"/>
+</android.support.constraint.ConstraintLayout>

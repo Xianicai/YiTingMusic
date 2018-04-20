@@ -2,7 +2,6 @@ package com.yiting.music.utils.retrofit;
 
 
 import com.yiting.music.base.BaseApplication;
-import com.yiting.music.common.Urls;
 import com.yiting.music.utils.retrofit.factory.ResponseConverterFactory;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class Requester {
 
     private Requester() {
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(Urls.BASE_URL)
+                .baseUrl("http://capi.douyucdn.cn")
                 .addConverterFactory(ResponseConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(getOkHttpClient())
