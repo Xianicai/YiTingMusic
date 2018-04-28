@@ -52,7 +52,7 @@ public class GlideImageView extends android.support.v7.widget.AppCompatImageView
                     .crossFade()
                     .into(this);
         } else {
-//            ToastUtil.showMessage("亲请设置默认图片n(*≧▽≦*)n");
+            ToastUtil.showMessage("亲请设置默认图片n(*≧▽≦*)n");
         }
 
     }

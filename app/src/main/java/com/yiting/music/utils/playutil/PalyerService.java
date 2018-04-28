@@ -13,8 +13,6 @@ import com.yiting.music.base.MusicBean;
 import com.yiting.music.utils.EventCallback;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Date: 2018/4/9.
@@ -26,7 +24,6 @@ public class PalyerService extends Service implements MediaPlayer.OnPreparedList
     public static final int PLAYER_IS_PAUSE = 2;
     public static final int PLAYER_IS_STOP = 3;
     public static int playerState = PLAYER_IS_STOP;
-    public List<MusicBean> mMusicBeanList = new ArrayList<>();
     private MusicBean mMusicBean = new MusicBean();
     private MediaPlayer mMediaPlayer;
     private int mDuration;
@@ -84,7 +81,7 @@ public class PalyerService extends Service implements MediaPlayer.OnPreparedList
      */
     public void play(final MusicBean music) {
         try {
-//            mMediaPlayer.reset();
+            //mMediaPlayer.reset();
             mMediaPlayer.setDataSource(music.getPath());
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
@@ -139,7 +136,6 @@ public class PalyerService extends Service implements MediaPlayer.OnPreparedList
                     sendMessageDelayed(mHandler.obtainMessage(MSG_START),1000);
                     break;
                 case MSG_STOP:
-
                     break;
             }
         }
@@ -179,7 +175,7 @@ public class PalyerService extends Service implements MediaPlayer.OnPreparedList
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         prepareCallback.onEvent(mediaPlayer);
-        mDuration =  (mediaPlayer.getDuration())/1000;
+        mDuration =  (mediaPlayer.getDuration()/1000);
          mMediaPlayer.start();
         playerState = PLAYER_IS_PLAYING;
     }

@@ -26,7 +26,12 @@ public class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     @Override
     public T convert(ResponseBody value) throws IOException {
         String response = UnicodeUtil.decode(value.string()).trim();
-        return gson.fromJson(response, type);
+        if (response.contains("(")) {
+            String newResponse = response.substring(response.indexOf("(") + 1, response.indexOf(")"));
+            return gson.fromJson(newResponse, type);
+        } else {
+            return gson.fromJson(response, type);
+        }
 
     }
 }

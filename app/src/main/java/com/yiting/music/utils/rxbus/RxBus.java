@@ -1,4 +1,4 @@
-package com.yiting.music.common;
+package com.yiting.music.utils.rxbus;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;

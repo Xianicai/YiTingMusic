@@ -28,7 +28,7 @@ public class SpeciaItemAdapter extends CommonRecyclerAdapter<TypeListBean.SongLi
 
     @Override
     public void convert(ViewHolder holder, TypeListBean.SongListBean item) {
-        holder.setText(R.id.tv_name, holder.getAdapterPosition() + " " + item.getTitle());
+        holder.setText(R.id.tv_name, holder.getAdapterPosition() + " " + item.getTitle()+" - ");
         holder.setText(R.id.tv_author, item.getArtist_name());
 
     }

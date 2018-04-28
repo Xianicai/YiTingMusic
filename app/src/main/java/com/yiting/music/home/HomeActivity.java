@@ -9,10 +9,17 @@ import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -38,11 +45,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-
-    @BindView(R.id.image_menu)
-    ImageView mImageMenu;
     @BindView(R.id.tablayout)
     TabLayout mTablayout;
     @BindView(R.id.image_search)
@@ -61,10 +66,16 @@ public class HomeActivity extends BaseActivity {
     ImageView mImageNext;
     @BindView(R.id.seekbar)
     SeekBar mSeekbar;
-    private boolean isBind = false;
+    @BindView(R.id.nav_view)
+    NavigationView mNavView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     private List<MusicBean> mMusicBeanList = new ArrayList<>();
     private int mMusicIndex = 0;
     private MusicBean mMusicBean;
+    private boolean isBind = false;
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -97,11 +108,17 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     public int getlayoutId() {
-        return R.layout.activity_home;
+        return R.layout.activity_new_home;
     }
 
     @Override
     public void initViews(Bundle savedInstanceState) {
+        mNavView.setNavigationItemSelectedListener(this);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
         //绑定service
         Intent intent = new Intent(this, PalyerService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -148,10 +165,11 @@ public class HomeActivity extends BaseActivity {
         //将第一个数据初始化
         if (ListUtil.isNotEmpty(mMusicBeanList)) {
             mMusicBean = mMusicBeanList.get(0);
-//            changView();
+            changView(mMusicBean);
         }
         addEvent();
     }
+
 
     private void addEvent() {
         Reciver mReciver = new Reciver();
@@ -163,14 +181,13 @@ public class HomeActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.image_menu, R.id.image_search, R.id.image_cover, R.id.image_play, R.id.image_next})
+    @OnClick({R.id.image_search, R.id.image_cover, R.id.image_play, R.id.image_next})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.image_menu:
-                break;
             case R.id.image_search:
                 break;
             case R.id.image_cover:
+                MusicDetailActivity.start(this,mMusicBean);
                 break;
             case R.id.image_play:
                 playMusic(mMusicBean);
@@ -188,6 +205,7 @@ public class HomeActivity extends BaseActivity {
         switch (mMusicBinder.getState()) {
             case PalyerService.PLAYER_IS_STOP:
                 mMusicBinder.play(musicBean);
+                mMusicBean.setDuration(mMusicBinder.getCurrentStreamPosition());
                 changView(musicBean);
                 mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
                 break;
@@ -216,8 +234,11 @@ public class HomeActivity extends BaseActivity {
         }
         if (ListUtil.isNotEmpty(mMusicBeanList)) {
             mMusicBean = mMusicBeanList.get(mMusicIndex);
+            mMusicBinder.stop();
             mMusicBinder.play(mMusicBean);
+            mMusicBean.setDuration(mMusicBinder.getCurrentStreamPosition());
             changView(mMusicBean);
+            mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
         }
     }
 
@@ -234,17 +255,77 @@ public class HomeActivity extends BaseActivity {
         unbindService(mConnection);
     }
 
+
     class Reciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Constant.RXBUS_PALY_MUSIC.equals(intent.getAction())) {
-                MusicBean musicBean = (MusicBean) intent.getSerializableExtra("MusicBean");
+                mMusicBean = (MusicBean) intent.getSerializableExtra("MusicBean");
                 mMusicBinder.stop();
-                mMusicBinder.play(musicBean);
-                changView(musicBean);
+                mMusicBinder.play(mMusicBean);
+                mMusicBean.setDuration(mMusicBinder.getCurrentStreamPosition());
+                changView(mMusicBean);
                 mImagePlay.setImageResource(R.mipmap.ic_play_bar_btn_pause);
             }
         }
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.new_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

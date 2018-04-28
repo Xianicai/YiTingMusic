@@ -16,7 +16,9 @@
         android:textColor="@color/black"
         android:textSize="@dimen/text_primary_size"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableLeft="@mipmap/ic_online_music_list_profile_headline"
+        android:drawablePadding="5dp"/>
 
     <TextView
         android:id="@+id/tv_hot"
@@ -26,7 +28,8 @@
         android:paddingRight="10dp"
         android:text="最热"
         android:textSize="@dimen/text_secondary_size"
-        app:layout_constraintRight_toLeftOf="@+id/tv_new"/>
+        app:layout_constraintRight_toLeftOf="@+id/tv_new"
+        android:visibility="gone"/>
 
     <View
         android:id="@+id/view"
@@ -35,7 +38,8 @@
         android:background="@color/gray"
         app:layout_constraintBottom_toBottomOf="@+id/tv_new"
         app:layout_constraintRight_toLeftOf="@+id/tv_new"
-        app:layout_constraintTop_toTopOf="@+id/tv_new"/>
+        app:layout_constraintTop_toTopOf="@+id/tv_new"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_new"
@@ -47,7 +51,8 @@
         android:text="最新"
         android:textSize="@dimen/text_secondary_size"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"

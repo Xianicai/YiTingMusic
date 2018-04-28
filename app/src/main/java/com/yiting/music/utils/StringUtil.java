@@ -5,6 +5,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -507,5 +509,33 @@ public class StringUtil {
             json = json.replace(target, target.replace("\"", "\\\""));
         }
         return json;
+    }
+
+
+    /**
+     * 提取中括号中内容，忽略中括号中的括号
+     * @param msg
+     * @return
+     */
+    public static List<String> extractMessage(String msg) {
+
+        List<String> list = new ArrayList<String>();
+        int start = 0;
+        int startFlag = 0;
+        int endFlag = 0;
+        for (int i = 0; i < msg.length(); i++) {
+            if (msg.charAt(i) == '(') {
+                startFlag++;
+                if (startFlag == endFlag + 1) {
+                    start = i;
+                }
+            } else if (msg.charAt(i) == ')') {
+                endFlag++;
+                if (endFlag == startFlag) {
+                    list.add(msg.substring(start + 1, i));
+                }
+            }
+        }
+        return list;
     }
 }

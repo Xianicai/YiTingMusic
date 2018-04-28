@@ -6,6 +6,5 @@ package com.yiting.music.online.presenter;
  */
 
 public interface OnlineMusicPresenter {
-    void getOnlineList(int type, int size, int offset);
-
+    void getOnlineList(String type, int size, int offset);
 }

@@ -22,7 +22,7 @@ public class OnlineMusicPresenterImpl extends BasePresenterImpl<OnlineMusicView>
     }
 
     @Override
-    public void getOnlineList(int type, int size, int offset) {
+    public void getOnlineList(String type, int size, int offset) {
         mProvider.getOnlineList(type, size, offset)
                 .compose(new ThreadTransformer<TypeListBean>())
                 .subscribe(new RespondObserver<TypeListBean>() {
